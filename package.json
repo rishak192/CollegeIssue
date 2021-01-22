@@ -1,9 +1,8 @@
 {
   "name": "CollegeIssue",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
-    "start": "index.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,10 +13,19 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase-admin": "^9.4.2",
+    "heroku": "^7.47.11",
     "mongodb": "^3.6.3",
     "nodemailer": "^6.4.17",
     "nodemon": "^2.0.7"
   },
   "devDependencies": {},
-  "description": ""
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishak192/CollegeIssue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rishak192/CollegeIssue/issues"
+  },
+  "homepage": "https://github.com/rishak192/CollegeIssue#readme"
 }
