@@ -1,0 +1,101 @@
+.auth{
+    display: flex;
+    text-align: center;
+    justify-content: end;
+    align-items: center;
+    flex: 15%;
+}
+.auth button{
+    display: flex;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    height: 75%;
+    margin: 0 5px;
+    background-color: indianred;
+    font-weight: bolder;
+    color: black;
+}
+
+.asign{
+    display: none;
+    position: sticky;
+    top: 40px;
+    height: 580px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding:40px;
+    z-index: 1;
+}
+
+.alog{
+    display: none;
+    position: absolute;
+    height: 580px;
+    left: 0;
+    right: 0;
+    position: sticky;
+    top: 40px;
+    margin: auto;
+    padding:40px;
+    z-index: 1;
+}
+
+.sign{
+    position: sticky;
+    display: flex;
+    flex-direction: column;
+    border: 0.2px solid rgb(0, 0, 0);
+    justify-content: space-around;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    box-shadow: 1px -1px 20px 2px white;
+    background-color: white;
+    height: 500px;
+    width: 300px;
+    z-index: 1;
+}
+
+.accountsign{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 5px;
+}
+
+.accountsign button{
+    width: 100%;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    height: 40px;
+}
+
+.signform{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 5px;
+}
+
+.signform input{
+    width: 100%;
+    margin: 10px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(0, 0, 0);
+    height: 40px;
+    color: rgb(0, 0, 0);
+    padding: 5px;
+    border-radius: 10px;
+}

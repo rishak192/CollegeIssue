@@ -1,0 +1,39 @@
+<!DOCTYPE html5>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Search Result</title>
+        <link rel="stylesheet" href="css/profile.css">
+        <link rel="stylesheet" href="css/common.css">
+    </head>
+    <body>
+        <div class="topbar">
+            <h2 class="title">College Issue</h2>
+            <div class="ask">
+                <button onclick="askDropdown()">Ask</button>
+            </div>
+            <div class="search">
+                <input type="text" placeholder="search..." class="stext">
+                <input type="submit" value="Search" class="sbutton">
+            </div>
+            <div class="name">
+                <h2>Rishak Kumar Gupta</h2>
+            </div>
+        </div>
+        <div id="dropdown">
+            <form action="">
+                <input type="text" placeholder="Enter your Question..." id="askText">
+                <input type="submit" value="Post Question" id="askSubmit">
+            </form>
+        </div>
+        <div class="maincontent">
+            <div class="subcontent">
+            </div>
+        </div>
+        <script src="ask.js"></script>
+        <script src="content.js"></script>
+        <script>
+            onlyAns()
+        </script>
+    </body>
+</html>

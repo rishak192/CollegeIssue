@@ -1,0 +1,58 @@
+<!DOCTYPE html5>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Profile</title>
+        <link rel="stylesheet" href="css/profile.css">
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/responsive.css">
+        <script src="profile.js"></script>
+        
+    </head>
+    <body>
+        <script>
+            updateprofile()
+        </script>
+        <script src="logout.js"></script>
+        <div class="topbar">
+            <h2 class="title">College Issue</h2>
+            <h2 class="smalltitle">CI</h2>
+            <div class="ask">
+                <button onclick="askDropdown()">Ask</button>
+            </div>
+            <div class="search">
+                <input type="text" placeholder="search..." class="stext" required>
+                <input type="submit" value="Search" class="sbutton">
+            </div>
+            <div class="smallsearch">
+                <input type="submit" value="Search" class="sbutton">
+            </div>
+            <div class="name">
+                <h2></h2>
+                <button onclick="logout()">LogOut</button>
+            </div>
+        </div>
+        <div id="dropdown">
+            <form onsubmit="postques(event)">
+                <div class="askform">
+                    <div id="askText">
+                        <input type="text" required placeholder="Enter your Question..." name="question" onchange="handleChange(this)">
+                    </div>
+                    <div id="askSubmit">
+                        <input type="submit" value="Post Question">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="maincontent">
+            <div class="subcontent"></div>
+        </div>
+        <script src="ask.js"></script>
+        <script src="content.js"></script>
+        <script>
+            addContent()
+        </script>
+    </body>
+</html>

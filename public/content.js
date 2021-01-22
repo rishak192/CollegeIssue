@@ -1,0 +1,594 @@
+var allcontent=[]
+var contentDetails={
+    question:"",
+    uid:"",
+    answer:{
+        
+    },
+    comments:[],
+    id:"",
+    count:{
+        like:"",
+        dislike:""
+    },
+    datetime:""
+}
+
+function checkEmpty(text){
+    if(text!==undefined && text!==""){
+        return true
+    }else{
+        return false
+    }
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    console.log(decodedCookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+const uid=getCookie("useremail")
+const uname=getCookie("username")
+
+function getDate(datetime){
+    date = new Date(datetime);
+            year = date.getFullYear();
+            month = date.getMonth()+1;
+            dt = date.getDate();
+
+            if (dt < 10) {
+                dt = '0' + dt;
+            }
+            if (month < 10) {
+                month = '0' + month;
+            }
+        return [year,month,dt]
+}
+
+fetch('/addcontent', {
+    method: 'get',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    }).then((res) => res.json())
+    .then((json) => {
+        var reslen=json.mes.length
+        var res=json.mes
+        for(var i=0;i<reslen;i++){
+            console.log(i);
+            date=getDate(res[i].DateTime)
+            contentDetails={
+                question:res[i].Question,
+                uid:res[i].UploaderName,
+                answer:{},
+                comments:{},
+                id:res[i]._id,
+                count:{
+                    like:"",
+                    dislike:""
+                },
+                datetime:date[0]+'-'+date[1]+'-'+date[2]
+            }
+
+            for(items in res[i]["Answers"]){
+                console.log(items+" Items ",res[i]["Answers"][items]);
+                // contentDetails.answer[items]=[res[i]["Answers"][items]["Answer"],res[i]["Answers"][items]["DateTime"]]
+                // contentDetails.answer[items]=res[i]["Answers"][items]
+                contentDetails.answer[res[i]["Answers"][items]["UploaderID"]]=res[i]["Answers"][items]
+            }
+            var allcom=[]
+            for(items in res[i]["Comments"]){
+                // contentDetails.comments[items]=res[i]["Comments"][items]
+                // contentDetails.comments[res[i]["Comments"][items]["UploaderID"]]=res[i]["Comments"][items]
+                allcom.push(res[i]["Comments"][items])
+            }
+            contentDetails["comments"]=allcom
+            // for(items in contentDetails.answer){
+            //     console.log(contentDetails.answer[items])
+            // }
+            // console.log("Answer ",contentDetails["answer"]);        
+            allcontent.push(contentDetails)
+        }
+        console.log("all "+allcontent);
+        addContent()
+})
+
+function quesEle(ques){
+    var div=document.createElement("DIV")
+    var p=document.createElement("p")
+    p.innerText=ques
+    div.append(p)
+    div.className="contentques"
+
+    return div
+}
+
+function timeEle(time){
+    var div=document.createElement("DIV")
+    var p=document.createElement("p")
+    p.innerText=time
+    div.append(p)
+    div.className="contenttime"
+
+    return div
+}
+
+function datetimeEle(datetime){
+    var div=document.createElement("DIV")
+    var p=document.createElement("p")
+    p.innerText=datetime
+    div.append(p)
+    div.className="contentdate"
+
+    return div
+}
+
+function completeAns(ans,item){
+    console.log(item);
+    var cans=document.createElement("div")
+    cans.className="cans"
+
+    var ansddiv=document.createElement("div")
+    ansddiv.className="ansddiv"
+
+    var ansdatediv=document.createElement("div")
+    var add=document.createElement("p")
+    var date=getDate(ans[item]["DateTime"])
+    add.innerText=date[0]+'-'+date[1]+'-'+date[2]
+    ansdatediv.append(add)
+
+    var uploaderdiv=document.createElement("div")
+    var uid=document.createElement("p")
+    uid.innerText=item
+    uploaderdiv.append(uid)
+
+    var anscontaindiv=document.createElement("div")
+    anscontaindiv.className="anscontaindiv"
+
+    ansddiv.append(uploaderdiv,ansdatediv)
+    var p=document.createElement("p")
+    p.innerText=ans[item]["Answer"]
+    anscontaindiv.append(p)
+    cans.append(ansddiv,anscontaindiv)
+
+    return cans
+}
+
+function ansEle(ans,id){
+    // console.log("Answersss ",ans);
+    var ansContainer=document.createElement("div")
+    ansContainer.className="ansContainer"
+
+    var hideans=document.createElement("DIV")
+    hideans.className="hideans"
+
+    var hideansp=document.createElement("P")
+    hideansp.innerText="-"
+
+    var ansp=document.createElement("P")
+    ansp.innerText="Hide Answer"
+
+    hideans.append(hideansp,ansp)
+
+    var contentans=document.createElement("DIV")
+    contentans.className="contentans"
+
+    hideans.addEventListener('click',function(){
+        var ha=document.getElementById(id);
+        var ac=ha.getElementsByClassName("contentans")[0]
+        if(ac.style.display==="none"){
+            ac.style.display="block"
+            hideansp.innerText="-"
+            ansp.innerText="Hide Answer"
+        }else{
+            ac.style.display="none"
+            hideansp.innerText="+"
+            ansp.innerText="Show Answer"
+        }
+    })
+
+    for(item in ans){
+        // console.log(ans[item]);
+        contentans.append(completeAns(ans,item))
+    }
+
+    ansContainer.append(hideans,contentans)
+
+    return ansContainer
+}
+
+function countEle(count){
+    var div=document.createElement("DIV")
+    var likeh3=document.createElement("H3")
+    var total=document.createElement("h4")
+    var dislikeh3=document.createElement("H3")
+    likeh3.innerText="+"
+    total.innerText="10"
+    dislikeh3.innerText="-"
+    div.append(likeh3)
+    div.append(total)
+    div.append(dislikeh3)
+    div.className="contentcount"
+
+    return div
+}
+
+function insertAns(id){
+    var insans=document.createElement("DIV")
+    insans.className="insans"
+    var p=document.createElement("P")
+    p.innerText="+"
+    insans.append(p)
+
+    p.addEventListener("click",function(){
+        // console.log(id);
+        var allc=document.getElementById(id)
+        var ansform=allc.children[0].children[1].children[3]
+        // console.log(allc.children[0].children[1].children[5]);
+        if(ansform.style.display==="flex"){
+            ansform.style.display="none"
+            ansform.style.boxShadow="none"
+            p.style.boxShadow="none"
+        }else{
+            ansform.style.display="flex"
+            ansform.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 1px 4px 2px"
+            p.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 0px 10px 5px"
+        }
+    })
+
+    return insans
+}
+
+function createSinans(ans){
+    var sans=document.createElement("P")
+    sans.innerText=ans
+
+    return sans
+}
+
+var ansDetails={
+    Answer:"",
+    uploaderID:"",
+    questionID:"",
+    DateTime:"",
+    uploaderName:""
+}
+
+function updateAns(id,answer,ele){
+    var updatedAns={}
+    // console.log("Updating");
+    var d = new Date();
+    ansDetails["Answer"]=answer
+    ansDetails["uploaderID"]=uid
+    ansDetails["DateTime"]=d
+    ansDetails["questionID"]=id
+    ansDetails["uploaderName"]=uname
+
+    updatedAns[uid]=ansDetails
+
+    // console.log(ansDetails);
+
+    fetch('/postanswer', {
+    method: 'post',
+    body : JSON.stringify({
+        ansDetails
+
+    }),
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    }).then((res) => res.json())
+    .then((json) => {
+        // var newans={}
+        // for(item in json.mes){
+        //     console.log(item);
+        //     newans[item]=json.mes[item]
+        // }
+
+        // console.log(json.mes);
+        // newans[json.mes["UploaderID"]]=json.mes
+
+        var newans=document.getElementById(id).children
+        var comparer=newans[0].getElementsByClassName("ansddiv")
+        var done=false
+        for(var i=0;i<comparer.length;i++){
+            if(comparer[i].children[0].children[0].innerText===uid){
+                newans[0].getElementsByClassName("anscontaindiv")[i].children[0].innerText=answer
+                done=true
+            }
+        }
+        if(!done){
+            console.log(updatedAns);
+            // console.log(item);
+            ele.prepend(completeAns(updatedAns,uid))
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+}
+
+var quesDetails={
+    question:"",
+    uploaderID:"",
+    datetime:new Date(),
+    uploaderName:"",
+}
+
+function handleChange(e){
+    quesDetails[e.name]=e.value
+}
+
+function postques(e){
+    e.preventDefault()
+    var d = new Date();
+    var userid=getCookie("uid");
+
+    quesDetails["uploaderID"]=userid
+    quesDetails["uploaderName"]=uname
+    console.log("postquestion "+quesDetails.datetime);
+
+    fetch('/postquestion', {
+    method: 'post',
+    body : JSON.stringify({
+        quesDetails
+    }),
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    }).then((res) => res.json())
+    .then((json) => {
+        console.log(json.mes);
+        location.reload()
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+}
+
+function ansForm(id){
+    var form='<div class="ansinput"><input type="text" placeholder="Answer..."></div><div class="ansbtn"><Button>Add Answer</Button></div>'
+    var ansform=document.createElement("DIV")
+    ansform.className="ansform"
+    ansform.innerHTML=form
+
+    var ch=ansform.children
+
+    ch[1].children[0].addEventListener("click",function(){
+        var appender=document.getElementById(id)
+        // console.log(appender.children[0].children[1].children[2].children);
+        if(checkEmpty(ch[0].children[0].value)){
+            updateAns(id,ch[0].children[0].value,appender.getElementsByClassName("contentans")[0])
+        }else{
+            alert("Please fill empty fields!")
+        }
+        
+    })
+
+    return ansform
+}
+
+function questionUploader(uid){
+    var quesUploader=document.createElement("div")
+    quesUploader.className="quesuploader"
+    var p=document.createElement("p")
+    p.innerText=uid
+
+    quesUploader.append(p)
+
+    return quesUploader
+}
+
+function createContent(uid,id,ques,ans,comments,count,datetime){
+    var atributes=["className","id","value","innerText"]
+    var content=document.createElement("DIV")
+    var atd=document.createElement("DIV")
+    var dt=document.createElement("DIV")
+    var allcontent=document.createElement("DIV")
+    allcontent.id=id
+    dt.append(questionUploader(uid),datetimeEle(datetime))
+    dt.className="dt"
+    atd.append(dt,quesEle(ques),ansEle(ans,id),ansForm(id),bottombar(id),commentBox(id))
+    atd.className="atd"
+
+    var ceinsans=document.createElement("DIV")
+    ceinsans.className="ceinsans"
+    ceinsans.append(countEle(count),insertAns(id))
+
+    content.append(ceinsans,atd)
+    content.className="content"
+    allcontent.className="allcontent"
+    allcontent.append(content,showComment(comments))
+    return allcontent
+}
+
+function addContent(){
+    // console.log("adding");
+    var content=["apple","banana","mango","watermelon","guava","grape","litchi","muskmelon"]
+    var main=document.getElementsByClassName("subcontent")[0]
+
+        for(var i=0;i<allcontent.length;i++){
+            // console.log("id "+allcontent[i].id);
+            main.append(createContent(allcontent[i].uid,allcontent[i].id, allcontent[i].question,
+                                      allcontent[i].answer,allcontent[i].comments, allcontent[i].count,
+                                      allcontent[i].datetime))
+        }
+}
+
+// function addQuestion(question){
+//     var main=document.getElementsByClassName("subcontent")[0]
+//     main.append(createContent(question.uid,question.id, question.question,
+//         question.answer,question.comments, question.count,
+//         question.datetime))
+// }
+
+function createAns(id,ans,count,time,date){
+    var atributes=["className","id","value","innerText"]
+    var content=document.createElement("DIV")
+    var atd=document.createElement("DIV")
+    var allcontent=document.createElement("DIV")
+    var dt=document.createElement("DIV")
+    allcontent.id=id
+    dt.append(dateEle(date),timeEle(time))
+    dt.className="dt"
+    atd.append(dt,ansEle(ans,id),bottombar(id),commentBox(id))
+    atd.className="atd"
+    content.append(countEle(count),atd)
+    content.className="content"
+    allcontent.className="allcontent"
+    allcontent.append(content,showComment("Rishak"))
+    return allcontent
+}
+
+function onlyAns(){
+    // console.log("adding");
+    var content=["apple","banana","mango","watermelon","guava","grape","litchi","muskmelon"]
+    var main=document.getElementsByClassName("subcontent")[0]
+
+    main.append(createAns(0,"fgdfgdssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfg",{like:5,dislike:6},"sdfsdf","SDfsdfsdf")
+                ,createAns(1,"fgdfgdssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfg",{like:5,dislike:6},"sdfsdf","SDfsdfsdf")
+                ,createAns(2,"fgdfgdssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfg",{like:5,dislike:6},"sdfsdf","SDfsdfsdf")
+                ,createAns(3,"fgdfgdssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfg",{like:5,dislike:6},"sdfsdf","SDfsdfsdf")
+                ,createAns(4,"fgdfgdssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfg",{like:5,dislike:6},"sdfsdf","SDfsdfsdf")
+                ,createAns(5,"fgdfgdssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfg",{like:5,dislike:6},"sdfsdf","SDfsdfsdf")
+                ,createAns(6,"fgdfgdssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfg",{like:5,dislike:6},"sdfsdf","SDfsdfsdf")
+                ,createAns(7,"fgdfgdssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddfg",{like:5,dislike:6},"sdfsdf","SDfsdfsdf")
+                )
+}
+
+function comment(id){
+    var comdiv=document.createElement("DIV")
+    comdiv.className="comment"
+    comdiv.innerText="Comment"
+    comdiv.addEventListener("click",function(){
+        // console.log("Clicked");
+        var ele=document.getElementById(id)
+        // console.log(ele.getElementsByClassName("commentbox")[0]);
+        // console.log(ele.getElementsByClassName("showcomment")[0]);
+        var cb=ele.getElementsByClassName("commentbox")[0]
+        var scc=ele.getElementsByClassName("showcomment")[0]
+        if(cb.style.display==="block"){
+            cb.style.display="none"
+            scc.style.display="none"
+            comdiv.style.boxShadow="none"
+        }else{
+            cb.style.display="block"
+            scc.style.display="block"
+            comdiv.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 1px 4px 2px"
+        }
+    })
+
+    return comdiv
+}
+
+function postcomment(comment,id){
+    var datetime=new Date()
+    var commentDetails={
+        Comment:comment,
+        UploaderID:uid,
+        QuestionID:id,
+        DateTime:datetime,
+        UploaderName:uname
+    }
+
+    fetch('/postcomment', {
+    method: 'post',
+    body : JSON.stringify({
+        commentDetails
+
+    }),
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+    }).then((res) => res.json())
+    .then((json) => {
+        insertCom(commentDetails,id)
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+}
+
+function commentBox(id){
+    var cb=document.createElement("DIV")
+    cb.className="commentbox"
+
+    var form='<div class="insertcom"><div class="cominput"><input type="text" placeholder="Comment..."></div><div class="combtn"><Button>Post Comment</Button></div></div>'
+    cb.innerHTML=form
+    // console.log("cb ",cb.children);
+
+    cb.children[0].children[1].children[0].addEventListener("click",function(){
+        // console.log(id);
+        var comvalue=cb.children[0].children[0].children[0].value
+        if(checkEmpty(comvalue)){
+            postcomment(comvalue,id)
+        }
+    })
+    return cb
+}
+
+function bottombar(id){
+    var atributes=["className","id","value","innerText"]
+    var bottombar=document.createElement("DIV")
+    bottombar.className="bottombar"
+    bottombar.append(comment(id))
+
+    return bottombar
+}
+
+function addComment(comment){
+    var sc=document.createElement("DIV")
+    sc.id=comment["UploaderID"]
+    var p=document.createElement("p")
+    var n=document.createElement("P")
+    var ddiv=document.createElement("div")
+    var d=document.createElement("p")
+    sc.className="singlecomment"
+    p.className="com"
+    n.className="commenter"
+    ddiv.className="comdetails"
+    p.innerText=comment["Comment"]
+    n.innerText=comment["UploaderName"]
+
+    var date=getDate(comment["DateTime"])
+    d.innerText=date[0]+'-'+date[1]+'-'+date[2]
+    ddiv.append(n,d)
+    sc.append(ddiv,p)
+
+    return sc
+}
+
+function insertCom(comment,id){
+    var sc=document.getElementById(id)
+    scc=sc.children[1]
+    console.log(sc.children[1]);
+
+    scc.prepend(addComment(comment))
+}
+
+function showComment(comments){
+    var div=document.createElement("DIV")
+    div.className="showcomment"
+    
+    for(item in comments){
+        div.append(addComment(comments[item]))
+    }
+
+    return div
+}
