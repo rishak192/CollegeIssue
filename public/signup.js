@@ -40,7 +40,7 @@ if(signupDetails["password"].length<6){
 }
 
 if(validated){
-    fetch('http://localhost:3005/signup', {
+    fetch('/signup', {
     method: 'post',
     body : JSON.stringify({
         signupDetails

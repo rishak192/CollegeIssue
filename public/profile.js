@@ -30,7 +30,7 @@ function updateprofile(){
     var user=getCookie("useremail")
     console.log(user);
 
-    fetch(('http://localhost:3005/userdetails/'+user), {
+    fetch(('/userdetails/'+user), {
     method: 'post',
     headers: {
         'Accept': 'application/json',

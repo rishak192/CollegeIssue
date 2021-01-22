@@ -46,7 +46,7 @@ if(signinDetails["password"].length<6){
 }
     
 if(validated){
-    fetch('http://localhost:3005/login', {
+    fetch('/login', {
     method: 'post',
     body : JSON.stringify({
         signinDetails
