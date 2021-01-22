@@ -315,6 +315,4 @@ const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology:
    run().catch(console.dir);
 })
 
-app.listen(3005, () => {
-  // console.log("listening");
-});
+app.listen(process.env.PORT || 3005);
