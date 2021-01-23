@@ -25,7 +25,7 @@ function checkEmpty(text){
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
-    console.log(decodedCookie);
+    // console.log(decodedCookie);
     var ca = decodedCookie.split(';');
     for(var i = 0; i < ca.length; i++) {
         var c = ca[i];
@@ -41,6 +41,9 @@ function getCookie(cname) {
 
 const uid=getCookie("useremail")
 const uname=getCookie("username")
+const userid=getCookie("uid")
+
+console.log("uid uname userid ",uid,uname,userid);
 
 function getDate(datetime){
     date = new Date(datetime);
@@ -68,7 +71,7 @@ fetch('/addcontent', {
         var reslen=json.mes.length
         var res=json.mes
         for(var i=0;i<reslen;i++){
-            console.log(i);
+            // console.log(i);
             date=getDate(res[i].DateTime)
             contentDetails={
                 question:res[i].Question,
@@ -84,7 +87,7 @@ fetch('/addcontent', {
             }
 
             for(items in res[i]["Answers"]){
-                console.log(items+" Items ",res[i]["Answers"][items]);
+                // console.log(items+" Items ",res[i]["Answers"][items]);
                 // contentDetails.answer[items]=[res[i]["Answers"][items]["Answer"],res[i]["Answers"][items]["DateTime"]]
                 // contentDetails.answer[items]=res[i]["Answers"][items]
                 contentDetails.answer[res[i]["Answers"][items]["UploaderID"]]=res[i]["Answers"][items]
@@ -102,9 +105,24 @@ fetch('/addcontent', {
             // console.log("Answer ",contentDetails["answer"]);        
             allcontent.push(contentDetails)
         }
-        console.log("all "+allcontent);
+        // console.log("all "+allcontent);
         addContent()
 })
+
+function askDropdown(){
+    if(uid!==""){
+        var drop=document.getElementById("dropdown")
+        if(drop.style.display==="block"){
+            drop.style.display="none"
+        }else{
+            drop.style.display="block"
+        }
+    }else{
+        var login=document.getElementsByClassName("login")[0]
+        login.children[0].innerText="Login to post question's!"
+        login.style.display="block"
+    }
+}
 
 function quesEle(ques){
     var div=document.createElement("DIV")
@@ -137,7 +155,7 @@ function datetimeEle(datetime){
 }
 
 function completeAns(ans,item){
-    console.log(item);
+    // console.log(item);
     var cans=document.createElement("div")
     cans.className="cans"
 
@@ -234,18 +252,22 @@ function insertAns(id){
     insans.append(p)
 
     p.addEventListener("click",function(){
-        // console.log(id);
-        var allc=document.getElementById(id)
-        var ansform=allc.children[0].children[1].children[3]
-        // console.log(allc.children[0].children[1].children[5]);
-        if(ansform.style.display==="flex"){
-            ansform.style.display="none"
-            ansform.style.boxShadow="none"
-            p.style.boxShadow="none"
+        if(uid!==""){
+            var allc=document.getElementById(id)
+            var ansform=allc.children[0].children[1].children[3]
+            if(ansform.style.display==="flex"){
+                ansform.style.display="none"
+                ansform.style.boxShadow="none"
+                p.style.boxShadow="none"
+            }else{
+                ansform.style.display="flex"
+                ansform.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 1px 4px 2px"
+                p.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 0px 10px 5px"
+            }
         }else{
-            ansform.style.display="flex"
-            ansform.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 1px 4px 2px"
-            p.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 0px 10px 5px"
+            var login=document.getElementsByClassName("login")[0]
+            login.children[0].innerText="Login to add an answer!"
+            login.style.display="block"
         }
     })
 
@@ -312,7 +334,7 @@ function updateAns(id,answer,ele){
             }
         }
         if(!done){
-            console.log(updatedAns);
+            // console.log(updatedAns);
             // console.log(item);
             ele.prepend(completeAns(updatedAns,uid))
         }
@@ -340,7 +362,7 @@ function postques(e){
 
     quesDetails["uploaderID"]=userid
     quesDetails["uploaderName"]=uname
-    console.log("postquestion "+quesDetails.datetime);
+    // console.log("postquestion "+quesDetails.datetime);
 
     fetch('/postquestion', {
     method: 'post',
@@ -353,7 +375,7 @@ function postques(e){
     }
     }).then((res) => res.json())
     .then((json) => {
-        console.log(json.mes);
+        // console.log(json.mes);
         location.reload()
     })
     .catch((error) => {
@@ -476,21 +498,18 @@ function comment(id){
     comdiv.className="comment"
     comdiv.innerText="Comment"
     comdiv.addEventListener("click",function(){
-        // console.log("Clicked");
-        var ele=document.getElementById(id)
-        // console.log(ele.getElementsByClassName("commentbox")[0]);
-        // console.log(ele.getElementsByClassName("showcomment")[0]);
-        var cb=ele.getElementsByClassName("commentbox")[0]
-        var scc=ele.getElementsByClassName("showcomment")[0]
-        if(cb.style.display==="block"){
-            cb.style.display="none"
-            scc.style.display="none"
-            comdiv.style.boxShadow="none"
-        }else{
-            cb.style.display="block"
-            scc.style.display="block"
-            comdiv.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 1px 4px 2px"
-        }
+            var ele=document.getElementById(id)
+            var cb=ele.getElementsByClassName("commentbox")[0]
+            var scc=ele.getElementsByClassName("showcomment")[0]
+            if(cb.style.display==="block"){
+                cb.style.display="none"
+                scc.style.display="none"
+                comdiv.style.boxShadow="none"
+            }else{
+                cb.style.display="block"
+                scc.style.display="block"
+                comdiv.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 1px 4px 2px"
+            }
     })
 
     return comdiv
@@ -534,10 +553,16 @@ function commentBox(id){
     // console.log("cb ",cb.children);
 
     cb.children[0].children[1].children[0].addEventListener("click",function(){
-        // console.log(id);
-        var comvalue=cb.children[0].children[0].children[0].value
-        if(checkEmpty(comvalue)){
-            postcomment(comvalue,id)
+        if(uid!==""){
+            var comvalue=cb.children[0].children[0].children[0].value
+            if(checkEmpty(comvalue)){
+                postcomment(comvalue,id)
+            }
+        }
+        else{
+            var login=document.getElementsByClassName("login")[0]
+            login.children[0].innerText="Login to post a comment!"
+            login.style.display="block"
         }
     })
     return cb
@@ -577,7 +602,7 @@ function addComment(comment){
 function insertCom(comment,id){
     var sc=document.getElementById(id)
     scc=sc.children[1]
-    console.log(sc.children[1]);
+    // console.log(sc.children[1]);
 
     scc.prepend(addComment(comment))
 }

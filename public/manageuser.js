@@ -21,6 +21,6 @@ console.log(user);
 if (user != "") {
     location.href=("profile.html")
 } else {
-        
+    
 }
 }

@@ -9,5 +9,6 @@ function logout(){
     console.log("Logout");
     setCookie("useremail", null, 0);
     setCookie("username", null, 0);
+    setCookie("uid",null,0)
     location.replace("homepage.html")
 }
