@@ -40,7 +40,7 @@ function updateprofile(){
     .then((json) => {
         // console.log(json.mes);
         response=json.mes[0]
-        username[0].children[0].innerHTML=json.mes[0].name
+        username[0].children[0].children[0].innerHTML=json.mes[0].name
         setCookie("username",json.mes[0].name,30)
         setCookie("uid",json.mes[0]._id,30)
     })

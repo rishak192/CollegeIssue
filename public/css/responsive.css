@@ -3,10 +3,6 @@
       background-color: rgb(41, 120, 146);
     }
 
-    .search input[type=text]{
-      width: 50%;
-    }
-
     .title{
       display: none;
     }
@@ -23,20 +19,40 @@
     #askText{
       width: 50%;
     }
+    .search{
+      flex: 83%;
+    }
 
 }
 
-@media screen and (max-width:400px){
-  .search input[type=text]{
-    width: 15%;
-  }
-}
-
-@media screen and (max-width:340px){
+@media screen and (max-width:100px){
   .smallsearch{
     display: flex;
   }
   .search{
     display: none;
   }
+}
+
+@media screen and (max-width:601px){
+  .auth{
+    position: absolute;
+    top: 50px;
+    right: 0;
+    height: 20px;
+  }
+
+  .auth button{
+    margin: 0 0 0 5px;
+    height: 100%;
+  }
+
+  .name{
+    position: absolute;
+    top: 50px;
+    right: 0;
+    height: 20px;
+    margin-right: 0;
+  }
+
 }

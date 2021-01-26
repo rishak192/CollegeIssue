@@ -23,22 +23,31 @@
                 <button onclick="askDropdown()">Ask</button>
             </div>
             <div class="search">
-                <input type="text" placeholder="search..." class="stext">
-                <input type="submit" value="Search" class="sbutton">
+                <div class="stext">
+                    <input type="text" placeholder="search..."  oninput="recommentdations(this)">
+                </div>
+                <div class="sbutton">
+                    <input type="submit" value="Search" >
+                </div>
             </div>
             <div class="smallsearch">
-                <input type="submit" value="Search" class="sbutton">
+                <div>
+                    <input type="submit" value="Search" class="sbutton" onclick="showsearch()">
+                </div>  
             </div>
             <div class="auth">
-                <button onclick="showforms(this)" name="alog">Login</button>
-                <button onclick="showforms(this)" name="asign">Create Account</button>
+                <div class="hideauth">
+                    <button onclick="showforms(this)" name="alog">Login</button>
+                    <button onclick="showforms(this)" name="asign">Create Account</button>
+                </div>
             </div>
         </div>
+        <div class="allrec"></div>
         <div id="dropdown">
             <form onsubmit="postques(event)">
                 <div class="askform">
                     <div id="askText">
-                        <input type="text" placeholder="Enter your Question..." name="question" onchange="handleChange(this)">
+                        <input type="text" placeholder="Enter your Question..." name="question" oninput="handleChange(this)">
                     </div>
                     <div id="askSubmit">
                         <input type="submit" value="Post Question">
@@ -50,9 +59,9 @@
         <div class="asign">
             <div class="sign">
                 <form class="signform" onsubmit="signup(event);return false">
-                    <input type="text" placeholder="Username" name="username" onchange="handleChange(this)">
-                    <input type="password" placeholder="Password" name="password" onchange="handleChange(this)">
-                    <input type="email" placeholder="Email" name="email" onchange="handleChange(this)"> 
+                    <input type="text" placeholder="Username" name="username" oninput="handleChange(this)">
+                    <input type="password" placeholder="Password" name="password" oninput="handleChange(this)">
+                    <input type="email" placeholder="Email" name="email" oninput="handleChange(this)"> 
                     <input type="submit" value="Create Account">
                 </form>
             </div>

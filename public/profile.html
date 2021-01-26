@@ -23,17 +23,24 @@
                 <button onclick="askDropdown()">Ask</button>
             </div>
             <div class="search">
-                <input type="text" placeholder="search..." class="stext" required>
-                <input type="submit" value="Search" class="sbutton">
+                <div class="stext">
+                    <input type="text" placeholder="search..."  oninput="recommentdations(this)" onkeyup="clearrec(this)">
+                </div>
+                <div class="sbutton">
+                    <input type="submit" value="Search" >
+                </div>
             </div>
             <div class="smallsearch">
                 <input type="submit" value="Search" class="sbutton">
             </div>
             <div class="name">
-                <h2></h2>
-                <button onclick="logout()">LogOut</button>
+                <div class="hidename">
+                    <h2></h2>
+                    <button onclick="logout()">LogOut</button>
+                </div>
             </div>
         </div>
+        <div class="allrec"></div>
         <div id="dropdown">
             <form onsubmit="postques(event)">
                 <div class="askform">

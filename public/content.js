@@ -87,26 +87,16 @@ fetch('/addcontent', {
             }
 
             for(items in res[i]["Answers"]){
-                // console.log(items+" Items ",res[i]["Answers"][items]);
-                // contentDetails.answer[items]=[res[i]["Answers"][items]["Answer"],res[i]["Answers"][items]["DateTime"]]
-                // contentDetails.answer[items]=res[i]["Answers"][items]
                 contentDetails.answer[res[i]["Answers"][items]["UploaderID"]]=res[i]["Answers"][items]
             }
             var allcom=[]
             for(items in res[i]["Comments"]){
-                // contentDetails.comments[items]=res[i]["Comments"][items]
-                // contentDetails.comments[res[i]["Comments"][items]["UploaderID"]]=res[i]["Comments"][items]
                 allcom.push(res[i]["Comments"][items])
             }
-            contentDetails["comments"]=allcom
-            // for(items in contentDetails.answer){
-            //     console.log(contentDetails.answer[items])
-            // }
-            // console.log("Answer ",contentDetails["answer"]);        
+            contentDetails["comments"]=allcom      
             allcontent.push(contentDetails)
         }
-        // console.log("all "+allcontent);
-        addContent()
+        addContent(allcontent)
 })
 
 function askDropdown(){
@@ -121,6 +111,8 @@ function askDropdown(){
         var login=document.getElementsByClassName("login")[0]
         login.children[0].innerText="Login to post question's!"
         login.style.display="block"
+        var allrec=document.getElementsByClassName("allrec")[0]
+        allrec.style.top="71px"
     }
 }
 
@@ -268,6 +260,8 @@ function insertAns(id){
             var login=document.getElementsByClassName("login")[0]
             login.children[0].innerText="Login to add an answer!"
             login.style.display="block"
+            var allrec=document.getElementsByClassName("allrec")[0]
+            allrec.style.top="71px"
         }
     })
 
@@ -439,25 +433,17 @@ function createContent(uid,id,ques,ans,comments,count,datetime){
     return allcontent
 }
 
-function addContent(){
-    // console.log("adding");
-    var content=["apple","banana","mango","watermelon","guava","grape","litchi","muskmelon"]
+function addContent(allcontent){
     var main=document.getElementsByClassName("subcontent")[0]
-
+    if(allcontent!==undefined){
         for(var i=0;i<allcontent.length;i++){
-            // console.log("id "+allcontent[i].id);
             main.append(createContent(allcontent[i].uid,allcontent[i].id, allcontent[i].question,
                                       allcontent[i].answer,allcontent[i].comments, allcontent[i].count,
                                       allcontent[i].datetime))
         }
+    }
 }
 
-// function addQuestion(question){
-//     var main=document.getElementsByClassName("subcontent")[0]
-//     main.append(createContent(question.uid,question.id, question.question,
-//         question.answer,question.comments, question.count,
-//         question.datetime))
-// }
 
 function createAns(id,ans,count,time,date){
     var atributes=["className","id","value","innerText"]
@@ -563,6 +549,9 @@ function commentBox(id){
             var login=document.getElementsByClassName("login")[0]
             login.children[0].innerText="Login to post a comment!"
             login.style.display="block"
+
+            var allrec=document.getElementsByClassName("allrec")[0]
+            allrec.style.top="71px"
         }
     })
     return cb
@@ -616,4 +605,211 @@ function showComment(comments){
     }
 
     return div
+}
+
+var search=document.getElementsByClassName("search")[0].children
+
+function recommendedText(id,text){
+    var rtext=document.createElement("div")
+    rtext.id=id
+    var p=document.createElement("p")
+    p.innerText=text
+    rtext.append(p)
+    rtext.addEventListener('click',function(){
+        if(id!=="-1"){
+            exactSearch(text)
+        }else{
+            removeRecommentdations()
+            console.log("Add your question!");
+        }
+    })
+    return rtext
+
+}
+
+function exactSearch(query){
+    showload()
+    removeRecommentdations()
+    if(query!==""){
+        clearContent()
+        fetch('/exact', {
+            method: 'post',
+            body : JSON.stringify({
+                query
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+            }).then((res) => res.json())
+            .then((json) => {
+                addSearchedContent(json,json.mes.length)
+                hideload()
+        })
+    }
+}
+
+function clearrec(e){
+        removeRecommentdations()
+}
+
+// var allrec=document.createElement("div")
+// allrec.className="allrec"
+// document.body.append(allrec)
+
+var allr=document.getElementsByClassName("allrec")[0]
+var rectime;
+function recommentdations(event){
+    var value=event.value
+
+    removeRecommentdations()
+
+    if(value!==""){
+        fetch('/recommendation', {
+            method: 'post',
+            body : JSON.stringify({
+                value
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+            }).then((res) => res.json())
+            .then((json) => {
+                rec=json.mes
+                // showRecommentdations(json.mes)
+                // console.log(rec);
+                removeRecommentdations()
+                for(var i=0;i<rec.length;i++){
+                        allr.append(recommendedText(rec[i]["_id"],rec[i]["Question"]))
+                }
+                if(allr.children.length===0){
+                    if(rec.length===0){
+                            allr.append(recommendedText("-1","Sorry, no result's!"))
+                           rectime = setTimeout(() => {
+                                removeRecommentdations()
+                            }, 3000);
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+        });
+    }
+}
+
+function removeRecommentdations(){
+    for(var i=0;i<allr.children.length+i;i++){
+        allr.removeChild(allr.childNodes[0])
+    }
+    clearTimeout(rectime)
+}
+
+
+search[1].addEventListener("click",function(){
+    var query=search[0].value
+    searchQuery(query)
+})
+
+function searchQuery(query){
+    showload()
+    removeRecommentdations()
+    if(query!==""){
+        clearContent()
+        fetch('/search', {
+            method: 'post',
+            body : JSON.stringify({
+                query
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+            }).then((res) => res.json())
+            .then((json) => {
+                hideload()
+                addSearchedContent(json,json.mes.length)
+        })
+    }
+}
+
+function clearContent(){
+    var mainsub=document.getElementsByClassName("subcontent")[0]
+
+    for(var i=0;i<mainsub.children.length+i;i++){
+        // console.log("Removing");
+        mainsub.removeChild(mainsub.childNodes[0])
+    }
+}
+
+function addSearchedContent(json,size){
+    var searchContent=[]
+    var searchResult={
+        question:"",
+        uid:"",
+        answer:{
+            
+        },
+        comments:[],
+        id:"",
+        count:{
+            like:"",
+            dislike:""
+        },
+        datetime:""
+    }
+    var reslen=size
+    var res=json.mes
+    for(var i=0;i<reslen;i++){
+        date=getDate(res[i].DateTime)
+        searchResult={
+            question:res[i].Question,
+            uid:res[i].UploaderName,
+            answer:{},
+            comments:{},
+            id:res[i]._id,
+            count:{
+                like:"",
+                dislike:""
+            },
+            datetime:date[0]+'-'+date[1]+'-'+date[2]
+        }
+
+        for(items in res[i]["Answers"]){
+            searchResult.answer[res[i]["Answers"][items]["UploaderID"]]=res[i]["Answers"][items]
+        }
+        var allcom=[]
+        for(items in res[i]["Comments"]){
+            allcom.push(res[i]["Comments"][items])
+        }
+        searchResult["comments"]=allcom      
+        searchContent.push(searchResult)
+    }
+    addContent(searchContent)
+}
+var load=document.createElement("div")
+load.className="load"
+document.body.prepend(load)
+function showload(){
+    load.style.display="block"
+}
+
+function hideload(){
+    load.style.display="none"
+}
+
+function toggleAuth(){
+    var auth=document.getElementsByClassName("hideauth")[0]
+    auth.style.display="block"
+}
+
+function showsearch(){
+    var search=document.getElementsByClassName("search")[0]
+
+    // var searchform='<div class="search"><div class="stext"><input type="text" placeholder="search..."'+  
+    // 'oninput="recommentdations(this)"></div><div class="sbutton"><input type="submit" value="Search" ></div></div>'
+
+    // var hiddenseach=document.getElementsByClassName("hiddensearch")[0]
+    // hiddenseach.innerHTML=searchform
+    console.log("show");
 }

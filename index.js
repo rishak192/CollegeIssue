@@ -21,6 +21,20 @@ app.use(express.static("public"));
 const dbName = "CollegeIssue";
 
 app.get('/',function(req,res){
+//   const MongoClient = require('mongodb').MongoClient;
+//   const url = "mongodb+srv://rishak192:Mongodb@192@firstproject.8maq4.mongodb.net/CollegeIssue?retryWrites=true&w=majority";
+//   const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true});
+
+//   async function run() {
+//     await client.connect();
+
+//     const db = client.db(dbName);
+    
+//     await db.collection("QuesAns").createIndex({Question:"text"})
+
+// }
+// run().catch(console.dir);
+
   res.sendFile(__dirname + '/public/homepage.html');
 })
 
@@ -145,6 +159,147 @@ app.post('/postanswer',function(req,res){
    run().catch(console.dir);
 })
 
+app.post('/recommendation',function(req,res){
+  const MongoClient = require('mongodb').MongoClient;
+  const url = "mongodb+srv://rishak192:Mongodb@192@firstproject.8maq4.mongodb.net/CollegeIssue?retryWrites=true&w=majority";
+  const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true});
+
+  var query=req.body.value
+  // value='\\"'+value+'\\"'
+  console.log(query);
+  
+  async function run() {
+    await client.connect();
+
+    const db = client.db(dbName);
+
+      let result = await db.collection("QuesAns").aggregate([
+        {
+            "$search": {
+                "autocomplete": {
+                    "query": query,
+                    "path": "Question",
+                    "tokenOrder": "any",
+                    "fuzzy": {
+                      "maxEdits": 2,
+                      "prefixLength": 1,
+                      "maxExpansions": 256
+                    }
+                }
+              } 
+              // "$search": {
+              //   "wildcard": {
+              //     "path": "Question",
+              //     "query": "*"+query+"*"
+              //   }
+              // }
+            },
+            {
+              $project: {
+                "_id": 1,
+                "Question": 1
+              }
+            },
+            {
+              $limit: 7
+            }
+          ]).toArray();
+
+        console.log(result)
+        res.json({mes:result})
+
+      }
+      run().catch(console.dir);
+
+})
+
+app.post('/search',function(req,res){
+  const MongoClient = require('mongodb').MongoClient;
+  const url = "mongodb+srv://rishak192:Mongodb@192@firstproject.8maq4.mongodb.net/CollegeIssue?retryWrites=true&w=majority";
+  const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true});
+
+  var query=req.body.query
+  console.log(query);
+  
+  async function run() {
+    await client.connect();
+
+    const db = client.db(dbName);
+
+      let result = await db.collection("QuesAns").aggregate([
+        {
+            "$search": {
+                "autocomplete": {
+                  "path": "Question",
+                    "query": query,
+                    "tokenOrder": "any",
+                    "fuzzy": {
+                      "maxEdits": 2,
+                      "prefixLength": 1,
+                      "maxExpansions": 256
+                    }
+                }
+              }
+            // "$search": {
+            //   "wildcard": {
+            //     "path": "Question",
+            //     "query": "*"+query+"*"
+            //   }
+            // }
+          },
+          {
+            $limit: 7
+          }
+        ]).toArray();
+
+        console.log(result)
+        res.json({mes:result})
+      }
+      run().catch(console.dir);
+
+})
+
+app.post('/exact',function(req,res){
+  const MongoClient = require('mongodb').MongoClient;
+  const url = "mongodb+srv://rishak192:Mongodb@192@firstproject.8maq4.mongodb.net/CollegeIssue?retryWrites=true&w=majority";
+  const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true});
+
+  var query=req.body.query
+  query='\\"'+query+'\\"'
+  console.log(query);
+  
+  async function run() {
+    await client.connect();
+
+    const db = client.db(dbName);
+
+      let result = await db.collection("QuesAns").aggregate([
+          {
+            "$search": {
+              "autocomplete": {
+                "path": "Question",
+                "query": query,
+                "fuzzy": {
+                  "maxEdits": 2,
+                  "prefixLength": 1,
+                  "maxExpansions": 256
+                }
+              }
+            }
+          },
+          {
+            $limit: 7
+          }
+        ]).toArray();
+
+        console.log("exact ",result)
+        res.json({mes:result})
+
+      }
+      run().catch(console.dir);
+
+})
+
 app.get('/addcontent',function(req,res){
   const MongoClient = require('mongodb').MongoClient;
   const url = "mongodb+srv://rishak192:Mongodb@192@firstproject.8maq4.mongodb.net/CollegeIssue?retryWrites=true&w=majority";
@@ -155,12 +310,25 @@ app.get('/addcontent',function(req,res){
 
           const db = client.db(dbName);
 
-          db.collection("QuesAns").find({}).toArray(function(err, result) {
+          // var results=db.collection("QuesAns").aggregate([
+          //   { $match: { $text: { $search: "What" }}}
+          // ]).toArray(function(err, result) {
+          //   if(err) throw err
+          //   console.log(result[0]);
+          // })
+
+          // db.collection("QuesAns").find({$text:{$search:"What"}},function(err,result){
+          //   console.log(result[0]);
+          // })
+
+          // db.collection("QuesAns").find( {$text: { $search: "What" } } ).toArray(function(err,result){
+          //   console.log(result);
+          // })
+
+        db.collection("QuesAns").find({}).toArray(function(err, result) {
           if (err) throw err;
-            // console.log(result);
             res.json({mes:result})
-            // console.log("Done");
-        });
+         });
       }
     run().catch(console.dir);
 })

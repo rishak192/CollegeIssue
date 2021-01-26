@@ -20,7 +20,7 @@ input[type=submit]{
     position: sticky;
     top: 0;
     display: none;
-    z-index: 20;
+    z-index: 1;
     width: 100%;
 }
 
@@ -37,10 +37,37 @@ input[type=submit]{
     background-color: rgb(0, 0, 0);
     display: flex;
     width: 100%;
-    height: 41px;
+    height: 50px;
     top: 0;
     justify-content: space-between;
+    align-items: center;
     z-index: 2;
+}
+
+.allrec{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(218, 213, 213);
+    top: 50px;
+    left: 0;
+    right: 0;
+    z-index: 25;
+}
+
+.allrec div p{
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    background-color: black;
+    color: white;
+    border-bottom: 1px solid rgb(187, 145, 145);
+}
+
+.allrec div p:hover{
+    background-color: rgb(124, 123, 121);
 }
 
 .title{
@@ -52,7 +79,7 @@ input[type=submit]{
     color: rgb(250, 250, 250);
     background-color: black;
     flex: 10%;
-    height: 30px;
+    height: 40px;
     text-align: center;
     top: 0;
     bottom: 0;
@@ -69,7 +96,7 @@ input[type=submit]{
     color: rgb(250, 250, 250);
     background-color: black;
     flex: 10%;
-    height: 30px;
+    height: 40px;
     text-align: center;
     top: 0;
     bottom: 0;
@@ -87,7 +114,7 @@ input[type=submit]{
 }
 .ask button{
     border: 0;
-    height: 30px;
+    height: 40px;
     font-size: 20px;
     background-color: indianred;
     z-index: 1;
@@ -99,27 +126,47 @@ input[type=submit]{
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 40%;
-    height: 40px;
+    flex: 75%;
+    height: 50px;
 }
 
 .search input{
-    height: 75%;
+    height: 100%;    
     border-radius: 0;
+    width: 100%;
 }
 
 .search .stext{
     border: 0px;
+    height: 75%;
+    width: 100%;
+    flex: 80%;
+}
+
+.search .stext input{
+    border: none;
+}
+
+.search .stext input:focus{
+    box-shadow: 0px 0px 5px 2px rgb(245, 245, 245); 
 }
 
 .search .sbutton{
-    border: 0;
+    width: 100%;
+    flex: 20%;
+    height: 75%;
+    max-width: 80px;
+}
+
+.search .sbutton input{
+    width: 100%;
+    border: none;
+    background-color: indianred;
     color: rgb(0, 0, 0);
     font-size: 20px;
     font-weight: bolder;
-    background-color: indianred;
     text-align: center;
-    height: 75%;
+    height: 100%;
 }
 
 .smallsearch{
@@ -127,7 +174,15 @@ input[type=submit]{
     align-items: center;
     justify-content: center;
     flex: auto;
-    height: 40px;
+    height: 50px;
+}
+
+
+.smallsearch div{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .smallsearch input{
@@ -145,8 +200,8 @@ input[type=submit]{
     display: none;
     height: auto;
     position: sticky;
-    z-index: 1;
-    top: 40px;
+    z-index: 20;
+    top: 50px;
 }
 
 .askform {
@@ -485,4 +540,25 @@ input[type=submit]{
 
 .insans{
     cursor: pointer;
+}
+
+.load {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 30%;
+    height: 2px;
+    background-color: red;
+    animation-name: loadanim;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    z-index: 20;
+}
+
+@keyframes loadanim {
+    0% {margin-left:0;background-color: rgb(121, 238, 26);}
+    50% {margin-left: 70%;background-color: rgb(28, 106, 207);}
+    75%{background-color: rgb(255, 0, 221);}
+    100%{background-color: rgb(255, 208, 0);}
 }
