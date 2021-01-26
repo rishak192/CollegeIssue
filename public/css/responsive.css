@@ -39,7 +39,13 @@
     position: absolute;
     top: 50px;
     right: 0;
-    height: 20px;
+    height: 25px;
+    margin-right: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    background-color: black;
   }
 
   .auth button{
@@ -51,8 +57,32 @@
     position: absolute;
     top: 50px;
     right: 0;
-    height: 20px;
+    height: 25px;
     margin-right: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    background-color: black;
+  }
+
+  .hidename{
+    width: none;
+    margin: 2.5px 0;
+  }
+
+  .ask{
+    position: absolute;
+    height: 25px;
+    top: 50px;
+  }
+
+  .ask button{
+    height: 25px;
+  }
+
+  #dropdown{
+    top: 75px;
   }
 
 }

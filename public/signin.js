@@ -46,6 +46,7 @@ if(signinDetails["password"].length<6){
 }
     
 if(validated){
+    showload()
     fetch('/login', {
     method: 'post',
     body : JSON.stringify({

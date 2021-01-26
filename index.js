@@ -21,20 +21,6 @@ app.use(express.static("public"));
 const dbName = "CollegeIssue";
 
 app.get('/',function(req,res){
-//   const MongoClient = require('mongodb').MongoClient;
-//   const url = "mongodb+srv://rishak192:Mongodb@192@firstproject.8maq4.mongodb.net/CollegeIssue?retryWrites=true&w=majority";
-//   const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true});
-
-//   async function run() {
-//     await client.connect();
-
-//     const db = client.db(dbName);
-    
-//     await db.collection("QuesAns").createIndex({Question:"text"})
-
-// }
-// run().catch(console.dir);
-
   res.sendFile(__dirname + '/public/homepage.html');
 })
 
@@ -79,7 +65,15 @@ app.post('/postcomment',function(req,res){
           // })
 
           await col.updateOne({ "_id": ObjectId(questionID) },
-                        { $push: { Comments: commentDocument } })
+                        { $push: 
+                          { 
+                            Comments: 
+                            {
+                                $each: [ commentDocument ],
+                                $sort: { DateTime: -1 }
+                            } 
+                          } 
+                        })
 
           // console.log("Comment Added");
           res.json({mes:commentDocument});
@@ -143,7 +137,15 @@ app.post('/postanswer',function(req,res){
 
           if(updated["matchedCount"]===0){
             await col.updateOne({"_id":ObjectId(questionID)},
-                                {$push:{"Answers":answerDocument}})
+                                {
+                                  $push:{
+                                    Answers: 
+                                    {
+                                        $each: [ answerDocument ],
+                                        $sort: { DateTime: -1 }
+                                    } 
+                                }
+                              })
           }
 
           // console.log("Answer Added "+updated);
@@ -306,29 +308,20 @@ app.get('/addcontent',function(req,res){
   const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true});
 
   async function run() {
-          await client.connect();
+        await client.connect();
 
-          const db = client.db(dbName);
+        const db = client.db(dbName);
 
-          // var results=db.collection("QuesAns").aggregate([
-          //   { $match: { $text: { $search: "What" }}}
-          // ]).toArray(function(err, result) {
-          //   if(err) throw err
-          //   console.log(result[0]);
-          // })
-
-          // db.collection("QuesAns").find({$text:{$search:"What"}},function(err,result){
-          //   console.log(result[0]);
-          // })
-
-          // db.collection("QuesAns").find( {$text: { $search: "What" } } ).toArray(function(err,result){
-          //   console.log(result);
-          // })
-
-        db.collection("QuesAns").find({}).toArray(function(err, result) {
+        db.collection("QuesAns").find({}).sort({DateTime: -1}).toArray(function(err, result) {
           if (err) throw err;
+            console.log("result ",result);
             res.json({mes:result})
-         });
+         });;
+
+        // db.collection("QuesAns").find({}).toArray(function(err, result) {
+        //   if (err) throw err;
+        //     res.json({mes:result})
+        //  });
       }
     run().catch(console.dir);
 })

@@ -26,6 +26,8 @@ function getCookie(cname) {
 var reponse;
 
 function updateprofile(){
+    var topbar=document.getElementsByClassName("topbar")[0]
+    topbar.style.display="none"
     var username=document.getElementsByClassName("name")
     var user=getCookie("useremail")
     // console.log(user);
@@ -43,6 +45,9 @@ function updateprofile(){
         username[0].children[0].children[0].innerHTML=json.mes[0].name
         setCookie("username",json.mes[0].name,30)
         setCookie("uid",json.mes[0]._id,30)
+        uname=getCookie("username")
+        userid=getCookie("uid")
+        topbar.style.display="flex"
     })
     .catch((error) => {
         console.error(error);

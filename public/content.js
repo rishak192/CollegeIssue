@@ -14,6 +14,18 @@ var contentDetails={
     datetime:""
 }
 
+var load=document.createElement("div")
+load.className="load"
+document.body.prepend(load)
+
+function showload(){
+    load.style.display="block"
+}
+
+function hideload(){
+    load.style.display="none"
+}
+
 function checkEmpty(text){
     if(text!==undefined && text!==""){
         return true
@@ -40,8 +52,8 @@ function getCookie(cname) {
 }
 
 const uid=getCookie("useremail")
-const uname=getCookie("username")
-const userid=getCookie("uid")
+var uname=""
+var userid=""
 
 console.log("uid uname userid ",uid,uname,userid);
 
@@ -59,7 +71,7 @@ function getDate(datetime){
             }
         return [year,month,dt]
 }
-
+showload()
 fetch('/addcontent', {
     method: 'get',
     headers: {
@@ -97,6 +109,7 @@ fetch('/addcontent', {
             allcontent.push(contentDetails)
         }
         addContent(allcontent)
+        hideload()
 })
 
 function askDropdown(){
@@ -332,6 +345,7 @@ function updateAns(id,answer,ele){
             // console.log(item);
             ele.prepend(completeAns(updatedAns,uid))
         }
+        hideload()
     })
     .catch((error) => {
         console.error(error);
@@ -350,12 +364,14 @@ function handleChange(e){
 }
 
 function postques(e){
+    showload()
     e.preventDefault()
     var d = new Date();
     var userid=getCookie("uid");
 
     quesDetails["uploaderID"]=userid
     quesDetails["uploaderName"]=uname
+    quesDetails["question"]=quesDetails["question"].trim()
     // console.log("postquestion "+quesDetails.datetime);
 
     fetch('/postquestion', {
@@ -387,9 +403,11 @@ function ansForm(id){
 
     ch[1].children[0].addEventListener("click",function(){
         var appender=document.getElementById(id)
+        var text=ch[0].children[0].value
         // console.log(appender.children[0].children[1].children[2].children);
-        if(checkEmpty(ch[0].children[0].value)){
-            updateAns(id,ch[0].children[0].value,appender.getElementsByClassName("contentans")[0])
+        if(checkEmpty(text)){
+            updateAns(id,text.trim(),appender.getElementsByClassName("contentans")[0])
+            showload()
         }else{
             alert("Please fill empty fields!")
         }
@@ -502,6 +520,7 @@ function comment(id){
 }
 
 function postcomment(comment,id){
+    showload()
     var datetime=new Date()
     var commentDetails={
         Comment:comment,
@@ -542,7 +561,8 @@ function commentBox(id){
         if(uid!==""){
             var comvalue=cb.children[0].children[0].children[0].value
             if(checkEmpty(comvalue)){
-                postcomment(comvalue,id)
+                postcomment(comvalue.trim(),id)
+                showload()
             }
         }
         else{
@@ -594,6 +614,7 @@ function insertCom(comment,id){
     // console.log(sc.children[1]);
 
     scc.prepend(addComment(comment))
+    hideload()
 }
 
 function showComment(comments){
@@ -628,9 +649,9 @@ function recommendedText(id,text){
 }
 
 function exactSearch(query){
-    showload()
     removeRecommentdations()
-    if(query!==""){
+    if(query!=="" && query!=undefined){
+        showload()
         clearContent()
         fetch('/exact', {
             method: 'post',
@@ -650,7 +671,7 @@ function exactSearch(query){
 }
 
 function clearrec(e){
-        removeRecommentdations()
+    removeRecommentdations()
 }
 
 // var allrec=document.createElement("div")
@@ -659,6 +680,7 @@ function clearrec(e){
 
 var allr=document.getElementsByClassName("allrec")[0]
 var rectime;
+
 function recommentdations(event){
     var value=event.value
 
@@ -688,7 +710,7 @@ function recommentdations(event){
                             allr.append(recommendedText("-1","Sorry, no result's!"))
                            rectime = setTimeout(() => {
                                 removeRecommentdations()
-                            }, 3000);
+                            }, 1000);
                     }
                 }
             })
@@ -707,15 +729,15 @@ function removeRecommentdations(){
 
 
 search[1].addEventListener("click",function(){
-    var query=search[0].value
+    var query=search[0].children[0].value
     searchQuery(query)
 })
 
 function searchQuery(query){
-    showload()
+    console.log(query);
     removeRecommentdations()
-    if(query!==""){
-        clearContent()
+    if(query!=="" && query!==undefined){
+        showload()
         fetch('/search', {
             method: 'post',
             body : JSON.stringify({
@@ -728,6 +750,7 @@ function searchQuery(query){
             }).then((res) => res.json())
             .then((json) => {
                 hideload()
+                clearContent()
                 addSearchedContent(json,json.mes.length)
         })
     }
@@ -786,16 +809,6 @@ function addSearchedContent(json,size){
         searchContent.push(searchResult)
     }
     addContent(searchContent)
-}
-var load=document.createElement("div")
-load.className="load"
-document.body.prepend(load)
-function showload(){
-    load.style.display="block"
-}
-
-function hideload(){
-    load.style.display="none"
 }
 
 function toggleAuth(){
