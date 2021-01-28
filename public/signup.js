@@ -1,5 +1,5 @@
 var signupDetails={
-    username:"",
+    name:"",
     password:"",
     email:"",
 }
@@ -24,7 +24,7 @@ function signup(e){
 console.log(signupDetails);
 
 e.preventDefault()
-var keys=["username","password","email"]
+var keys=["name","password","email"]
 var validated=true;
 keys.map(item=>{
 console.log(item);

@@ -30,21 +30,20 @@ function updateprofile(){
     topbar.style.display="none"
     var username=document.getElementsByClassName("name")
     var user=getCookie("useremail")
-    // console.log(user);
 
     fetch(('/userdetails/'+user), {
-    method: 'post',
+    method: 'get',
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     }
     }).then((res) => res.json())
     .then((json) => {
-        // console.log(json.mes);
-        response=json.mes[0]
-        username[0].children[0].children[0].innerHTML=json.mes[0].name
-        setCookie("username",json.mes[0].name,30)
-        setCookie("uid",json.mes[0]._id,30)
+        console.log(json.mes);
+        response=json.mes
+        username[0].children[0].children[0].innerHTML=response.name
+        setCookie("username",response.name,30)
+        setCookie("uid",response._id,30)
         uname=getCookie("username")
         userid=getCookie("uid")
         topbar.style.display="flex"
@@ -52,7 +51,10 @@ function updateprofile(){
     .catch((error) => {
         console.error(error);
     });
-    // console.log(username[0].children[0]);
+}
+
+function account(){
+    location.href="/account.html"
 }
 
 

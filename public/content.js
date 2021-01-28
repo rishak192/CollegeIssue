@@ -34,6 +34,11 @@ function checkEmpty(text){
     }
 }
 
+// var bodyloading=document.createElement("div")
+// bodyloading.className="bodyloading"
+// bodyloading.innerHTML="<h1>Loding...</h1>"
+// document.body.append(bodyloading)
+
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -115,10 +120,13 @@ fetch('/addcontent', {
 function askDropdown(){
     if(uid!==""){
         var drop=document.getElementById("dropdown")
+        var ask=document.getElementsByClassName("ask")[0].children[0]
         if(drop.style.display==="block"){
             drop.style.display="none"
+            ask.style.boxShadow="none"
         }else{
             drop.style.display="block"
+            ask.style.boxShadow="0px 0px 1px 2px red;"
         }
     }else{
         var login=document.getElementsByClassName("login")[0]
@@ -199,29 +207,35 @@ function ansEle(ans,id){
     hideans.className="hideans"
 
     var hideansp=document.createElement("P")
-    hideansp.innerText="-"
+    
 
     var ansp=document.createElement("P")
-    ansp.innerText="Hide Answer"
+    
 
     hideans.append(hideansp,ansp)
 
     var contentans=document.createElement("DIV")
     contentans.className="contentans"
-
-    hideans.addEventListener('click',function(){
-        var ha=document.getElementById(id);
-        var ac=ha.getElementsByClassName("contentans")[0]
-        if(ac.style.display==="none"){
-            ac.style.display="block"
-            hideansp.innerText="-"
-            ansp.innerText="Hide Answer"
-        }else{
-            ac.style.display="none"
-            hideansp.innerText="+"
-            ansp.innerText="Show Answer"
-        }
-    })
+    if(Object.keys(ans).length === 0 && ans.constructor === Object){
+        hideansp.innerText="No Answer"
+        ansp.innerText="Click + to add Answer"
+    }else{
+        hideansp.innerText="-"
+        ansp.innerText="Hide Answer"
+        hideans.addEventListener('click',function(){
+            var ha=document.getElementById(id);
+            var ac=ha.getElementsByClassName("contentans")[0]
+            if(ac.style.display==="none"){
+                ac.style.display="block"
+                hideansp.innerText="-"
+                ansp.innerText="Hide Answer"
+            }else{
+                ac.style.display="none"
+                hideansp.innerText="+"
+                ansp.innerText="Show Answer"
+            }
+        })
+    }
 
     for(item in ans){
         // console.log(ans[item]);
@@ -353,26 +367,25 @@ function updateAns(id,answer,ele){
 }
 
 var quesDetails={
-    question:"",
-    uploaderID:"",
-    datetime:new Date(),
-    uploaderName:"",
+    "Question":"",
+    "UploaderID":"",
+    "UploaderName":"",
 }
 
 function handleChange(e){
-    quesDetails[e.name]=e.value
+    quesDetails["Question"]=e.value
 }
 
 function postques(e){
+    console.log(quesDetails);
     showload()
     e.preventDefault()
     var d = new Date();
     var userid=getCookie("uid");
 
-    quesDetails["uploaderID"]=userid
-    quesDetails["uploaderName"]=uname
-    quesDetails["question"]=quesDetails["question"].trim()
-    // console.log("postquestion "+quesDetails.datetime);
+    quesDetails["UploaderID"]=userid
+    quesDetails["UploaderName"]=uname
+    quesDetails["Question"]=quesDetails["Question"].trim()
 
     fetch('/postquestion', {
     method: 'post',

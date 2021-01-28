@@ -5,6 +5,9 @@
 
 body{
     background-color:lightblue;
+    animation-name: bodyload;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
 }
 
 button{
@@ -17,8 +20,7 @@ input[type=submit]{
 }
 
 .login{
-    position: sticky;
-    top: 0;
+    position: relative;
     display: none;
     z-index: 1;
     width: 100%;
@@ -239,7 +241,6 @@ input[type=submit]{
 
 .maincontent{
     position: relative;
-    border: 1px solid rgb(0, 160, 27);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -543,7 +544,7 @@ input[type=submit]{
 }
 
 .load {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     display: none;
@@ -561,4 +562,19 @@ input[type=submit]{
     50% {margin-left: 70%;background-color: rgb(28, 106, 207);}
     75%{background-color: rgb(255, 0, 221);}
     100%{background-color: rgb(255, 208, 0);}
+}
+
+@keyframes bodyload{
+}
+
+.bodyloading{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
