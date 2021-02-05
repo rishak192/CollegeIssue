@@ -1,7 +1,7 @@
 function getCookie(cname) {
 var name = cname + "=";
 var decodedCookie = decodeURIComponent(document.cookie);
-console.log(decodedCookie);
+// console.log(decodedCookie);
 var ca = decodedCookie.split(';');
 for(var i = 0; i < ca.length; i++) {
     var c = ca[i];
@@ -17,9 +17,9 @@ return "";
   
 function checkCookie() {
 var user=getCookie("useremail");
-console.log(user);
+// console.log(user);
 if (user != "") {
-    location.href=("profile.html")
+    location.replace("/login")
 } else {
     
 }

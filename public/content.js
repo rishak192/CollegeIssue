@@ -60,7 +60,7 @@ const uid=getCookie("useremail")
 var uname=""
 var userid=""
 
-console.log("uid uname userid ",uid,uname,userid);
+// console.log("uid uname userid ",uid,uname,userid);
 
 function getDate(datetime){
     date = new Date(datetime);
@@ -118,7 +118,7 @@ fetch('/addcontent', {
 })
 
 function askDropdown(){
-    if(uid!==""){
+    // if(uid!==""){
         var drop=document.getElementById("dropdown")
         var ask=document.getElementsByClassName("ask")[0].children[0]
         if(drop.style.display==="block"){
@@ -128,13 +128,13 @@ function askDropdown(){
             drop.style.display="block"
             ask.style.boxShadow="0px 0px 1px 2px red;"
         }
-    }else{
-        var login=document.getElementsByClassName("login")[0]
-        login.children[0].innerText="Login to post question's!"
-        login.style.display="block"
-        var allrec=document.getElementsByClassName("allrec")[0]
-        allrec.style.top="71px"
-    }
+    // }else{
+    //     var login=document.getElementsByClassName("login")[0]
+    //     login.children[0].innerText="Login to post question's!"
+    //     login.style.display="block"
+    //     var allrec=document.getElementsByClassName("allrec")[0]
+    //     allrec.style.top="71px"
+    // }
 }
 
 function quesEle(ques){
@@ -271,7 +271,7 @@ function insertAns(id){
     insans.append(p)
 
     p.addEventListener("click",function(){
-        if(uid!==""){
+        // if(uid!==""){
             var allc=document.getElementById(id)
             var ansform=allc.children[0].children[1].children[3]
             if(ansform.style.display==="flex"){
@@ -283,13 +283,13 @@ function insertAns(id){
                 ansform.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 1px 4px 2px"
                 p.style.boxShadow="rgba(0, 0, 0, 0.56) 0px 0px 10px 5px"
             }
-        }else{
-            var login=document.getElementsByClassName("login")[0]
-            login.children[0].innerText="Login to add an answer!"
-            login.style.display="block"
-            var allrec=document.getElementsByClassName("allrec")[0]
-            allrec.style.top="71px"
-        }
+        // }else{
+        //     var login=document.getElementsByClassName("login")[0]
+        //     login.children[0].innerText="Login to add an answer!"
+        //     login.style.display="block"
+        //     var allrec=document.getElementsByClassName("allrec")[0]
+        //     allrec.style.top="71px"
+        // }
     })
 
     return insans
@@ -315,16 +315,12 @@ function updateAns(id,answer,ele){
     // console.log("Updating");
     var d = new Date();
     ansDetails["Answer"]=answer
-    ansDetails["uploaderID"]=uid
     ansDetails["DateTime"]=d
     ansDetails["questionID"]=id
-    ansDetails["uploaderName"]=uname
-
-    updatedAns[uid]=ansDetails
 
     // console.log(ansDetails);
 
-    fetch('/postanswer', {
+    fetch('/login/postanswer', {
     method: 'post',
     body : JSON.stringify({
         ansDetails
@@ -336,28 +332,20 @@ function updateAns(id,answer,ele){
     }
     }).then((res) => res.json())
     .then((json) => {
-        // var newans={}
-        // for(item in json.mes){
-        //     console.log(item);
-        //     newans[item]=json.mes[item]
-        // }
-
-        // console.log(json.mes);
-        // newans[json.mes["UploaderID"]]=json.mes
-
+        var useremail=json.mes.UploaderID
+        ansDetails["uploaderName"]=json.mes.UploaderName
+        updatedAns[useremail]=ansDetails
         var newans=document.getElementById(id).children
         var comparer=newans[0].getElementsByClassName("ansddiv")
         var done=false
         for(var i=0;i<comparer.length;i++){
-            if(comparer[i].children[0].children[0].innerText===uid){
+            if(comparer[i].children[0].children[0].innerText===useremail){
                 newans[0].getElementsByClassName("anscontaindiv")[i].children[0].innerText=answer
                 done=true
             }
         }
         if(!done){
-            // console.log(updatedAns);
-            // console.log(item);
-            ele.prepend(completeAns(updatedAns,uid))
+            ele.prepend(completeAns(updatedAns,useremail))
         }
         hideload()
     })
@@ -377,17 +365,15 @@ function handleChange(e){
 }
 
 function postques(e){
-    console.log(quesDetails);
+    // console.log(quesDetails);
     showload()
     e.preventDefault()
     var d = new Date();
     var userid=getCookie("uid");
 
-    quesDetails["UploaderID"]=userid
-    quesDetails["UploaderName"]=uname
     quesDetails["Question"]=quesDetails["Question"].trim()
 
-    fetch('/postquestion', {
+    fetch('/login/postquestion', {
     method: 'post',
     body : JSON.stringify({
         quesDetails
@@ -398,7 +384,6 @@ function postques(e){
     }
     }).then((res) => res.json())
     .then((json) => {
-        // console.log(json.mes);
         location.reload()
     })
     .catch((error) => {
@@ -543,7 +528,7 @@ function postcomment(comment,id){
         UploaderName:uname
     }
 
-    fetch('/postcomment', {
+    fetch('/login/postcomment', {
     method: 'post',
     body : JSON.stringify({
         commentDetails
@@ -571,21 +556,21 @@ function commentBox(id){
     // console.log("cb ",cb.children);
 
     cb.children[0].children[1].children[0].addEventListener("click",function(){
-        if(uid!==""){
+        // if(uid!==""){
             var comvalue=cb.children[0].children[0].children[0].value
             if(checkEmpty(comvalue)){
                 postcomment(comvalue.trim(),id)
                 showload()
             }
-        }
-        else{
-            var login=document.getElementsByClassName("login")[0]
-            login.children[0].innerText="Login to post a comment!"
-            login.style.display="block"
+        // }
+        // else{
+        //     var login=document.getElementsByClassName("login")[0]
+        //     login.children[0].innerText="Login to post a comment!"
+        //     login.style.display="block"
 
-            var allrec=document.getElementsByClassName("allrec")[0]
-            allrec.style.top="71px"
-        }
+        //     var allrec=document.getElementsByClassName("allrec")[0]
+        //     allrec.style.top="71px"
+        // }
     })
     return cb
 }
@@ -654,7 +639,7 @@ function recommendedText(id,text){
             exactSearch(text)
         }else{
             removeRecommentdations()
-            console.log("Add your question!");
+            // console.log("Add your question!");
         }
     })
     return rtext
@@ -747,7 +732,7 @@ search[1].addEventListener("click",function(){
 })
 
 function searchQuery(query){
-    console.log(query);
+    // console.log(query);
     removeRecommentdations()
     if(query!=="" && query!==undefined){
         showload()
@@ -837,5 +822,5 @@ function showsearch(){
 
     // var hiddenseach=document.getElementsByClassName("hiddensearch")[0]
     // hiddenseach.innerHTML=searchform
-    console.log("show");
+    // console.log("show");
 }

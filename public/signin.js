@@ -7,18 +7,19 @@ function setCookie(cname,cvalue,exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires=" + d.toGMTString();
-    console.log(expires);
+    // console.log(expires);
     document.cookie = cname + "=" + cvalue + ";" + expires;
 }
 
 function handleinChange(e){
+    // console.log(e.name,e.value);
     signinDetails[e.name]=e.value
 }
 
 function validatein(e){
-    console.log("validating "+e+" "+signinDetails[e]);
+    // console.log("validating "+e+" "+signinDetails[e]);
     if(signinDetails[e]!==""){
-        console.log(e+" not empty");
+        // console.log(e+" not empty");
         signinDetails[e]=signinDetails[e].trim()
         return true
     }else{
@@ -27,18 +28,18 @@ function validatein(e){
 }
     
 function signin(e){
-console.log(signinDetails);
+// console.log(signinDetails);
 
 e.preventDefault()
 var keys=["password","email"]
 var validated=true;
 keys.map(item=>{
-console.log(item);
+// console.log(item);
     if(!validatein(item)){
-        console.log(item+" not validated");
+        // console.log(item+" not validated");
         validated=false
     }
-    console.log(item+" validated");
+    // console.log(item+" validated");
 })
 
 if(signinDetails["password"].length<6){
@@ -46,8 +47,9 @@ if(signinDetails["password"].length<6){
 }
     
 if(validated){
+    // console.log("validated");
     showload()
-    fetch('/login', {
+    fetch('/setcookie', {
     method: 'post',
     body : JSON.stringify({
         signinDetails
@@ -56,18 +58,16 @@ if(validated){
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     }
-    }).then((res) => res.json())
-    .then((json) => {
-    console.log(json.mes);
-        if(json.mes==="Welcome"){
-            setCookie("useremail", signinDetails["email"],30);
-            location.href="profile.html"
+    }).then(res=>res.json())
+    .then(res=>{
+        // console.log(res.mes);
+        if(res.mes==="Done"){
+            location.replace("/login")
+        }else{
+            // console.log("Activate");
         }
     })
-    .catch((error) => {
-    console.error(error);
-    });
-    }else{
-        console.log("Empty Fields");
-    }
+}else{
+    // console.log("Empty Fields");
+}
 }

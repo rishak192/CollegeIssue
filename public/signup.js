@@ -6,13 +6,13 @@ var signupDetails={
 
 function handleChange(e){
 signupDetails[e.name]=e.value
-console.log(e.name+" "+signupDetails[e.name]);
+// console.log(e.name+" "+signupDetails[e.name]);
 }
 
 function validate(e){
-console.log("validating "+e+" "+signupDetails[e]);
+// console.log("validating "+e+" "+signupDetails[e]);
 if(signupDetails[e]!==""){
-    console.log(e+" not empty");
+    // console.log(e+" not empty");
     signupDetails[e]=signupDetails[e].trim()
     return true
 }else{
@@ -21,18 +21,18 @@ if(signupDetails[e]!==""){
 }
 
 function signup(e){
-console.log(signupDetails);
+// console.log(signupDetails);
 
 e.preventDefault()
 var keys=["name","password","email"]
 var validated=true;
 keys.map(item=>{
-console.log(item);
+// console.log(item);
     if(!validate(item)){
-        console.log(item+" not validated");
+        // console.log(item+" not validated");
         validated=false
     }
-    console.log(item+" validated");
+    // console.log(item+" validated");
 })
 
 if(signupDetails["password"].length<6){
@@ -52,12 +52,12 @@ if(validated){
     }
     }).then((res) => res.json())
     .then((json) => {
-    console.log(json.mes);
+    // console.log(json.mes);
     })
     .catch((error) => {
     console.error(error);
     });
     }else{
-        console.log("Empty Fields");
+        // console.log("Empty Fields");
     }
 }

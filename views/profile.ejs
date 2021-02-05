@@ -3,6 +3,10 @@
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Expires" content="0">
+
 
         <title>Profile</title>
         <link rel="stylesheet" href="css/profile.css">
@@ -11,7 +15,7 @@
         <script src="profile.js"></script>
         
     </head>
-    <body onload="updateprofile()">
+    <body onload="check()">
         <script src="logout.js"></script>
         <div class="topbar">
             <h2 class="title">College Issue</h2>
@@ -32,7 +36,7 @@
             </div>
             <div class="name">
                 <div class="hidename">
-                    <h2 onclick="account()"></h2>
+                    <h2 onclick="account()"><%=name%> </h2>
                     <button onclick="logout()">LogOut</button>
                 </div>
             </div>
@@ -51,12 +55,14 @@
             </form>
         </div>
         <div class="maincontent">
-            <div class="subcontent"></div>
+            <div class="subcontent">
+                <%- include('container.ejs')-%>
+            </div>
         </div>
         <script src="ask.js"></script>
         <script src="content.js"></script>
         <script>
-            addContent()
+            // addContent()
         </script>
     </body>
 </html>

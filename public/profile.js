@@ -30,8 +30,9 @@ function updateprofile(){
     topbar.style.display="none"
     var username=document.getElementsByClassName("name")
     var user=getCookie("useremail")
+    // console.log("Updateprofile ",user);
 
-    fetch(('/userdetails/'+user), {
+    fetch(('/login/userdetails/'+user), {
     method: 'get',
     headers: {
         'Accept': 'application/json',
@@ -39,7 +40,7 @@ function updateprofile(){
     }
     }).then((res) => res.json())
     .then((json) => {
-        console.log(json.mes);
+        // console.log(json.mes);
         response=json.mes
         username[0].children[0].children[0].innerHTML=response.name
         setCookie("username",response.name,30)
@@ -54,7 +55,9 @@ function updateprofile(){
 }
 
 function account(){
-    location.href="/account.html"
+    location.href="/login/account"
 }
 
-
+function check(){
+    // console.log("Checking");
+}

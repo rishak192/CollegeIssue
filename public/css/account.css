@@ -1,0 +1,24 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.topbar{
+    height: 50px;
+    border: 1px solid red;
+}
+
+.links{
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    justify-content: flex-end;
+    align-items:center;
+    border: 1px solid blue;
+    height: 100%;
+}
+
+.links a{
+    text-decoration: none;
+    margin: 5px;
+}
